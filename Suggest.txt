@@ -1,0 +1,5 @@
+Ctrl+A
+Reorder by colums  ///
+DLC?
+Warning about last game  ///
+Fix spaces on find games ///
