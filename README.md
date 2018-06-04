@@ -101,6 +101,6 @@ Just rename `Keys.bak` to `Keys.db` and launch the program.
 Check out if it has permission to write in its actual directory. Otherwise it won't be able to do anything.
 
 ### There will be updates? / Can I request a feature/modification?
-There are no plans for me to update this. Doesn't mean you can't request a feature, feel free to do it. I will maybe add it if I found it easy to add or I personally find it useful.
+There are no plans for me to update this. Doesn't mean you can't request a feature, feel free to do it. I will maybe add it if I find it easy to add or I personally find it useful.
 
 If you wanna contribute with code, feel free to submit a pull request. I will check it and merge it if it doesn't breaks anything :P
