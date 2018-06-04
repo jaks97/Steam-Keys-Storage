@@ -7,6 +7,8 @@ it, it was just made to suit personal needs.
 
 If you want to try it just download it from the [releases page](https://github.com/jaks97/Steam-Keys-Storage/releases/latest).
 
+It requires [.NET Framework 4.5.1](https://www.microsoft.com/en-us/download/details.aspx?id=40779) or greater to run. It only works on Windows.
+
 ## How to use it?
 Just launch the .exe you have downloaded and it should open a window like this:
 ![](https://i.imgur.com/m1Ms1As.png)
@@ -76,7 +78,7 @@ Same applies for keys export. Just the available tags are a bit different. Here 
 
 ---
 
-Then you have the option to ecrypt your data with a password.
+Then you have the option to ecrypt your data with a password:
 
 ![](https://i.imgur.com/KCzHpvW.png)
 
@@ -86,3 +88,18 @@ If you don't specify a new password, then encryption will be disabled.
 
 ---
 
+### Why it asks for password when I haven't set up one? / It says my password is wrong?
+There is a rare possibility that your `.db` file became corrupted. Sorry, your data is lost. Well, not all of it. You can use the backup file to restore it to a working point.
+
+### How do I use backup file to restore my data?
+Just rename `Keys.bak` to `Keys.db` and launch the program. 
+
+`Keys.bak` contains the data that was saved the last time that you started the program without any failures. It doesn't includes the data you wrote in that launch.
+
+### I just downloaded the tool and it doesn't starts
+Check out if it has permission to write in its actual directory. Otherwise it won't be able to do anything.
+
+### There will be updates? / Can I request a feature/modification?
+There are no plans for me to update this. Doesn't mean you can't request a feature, feel free to do it. I will maybe add it if I found it easy to add or I personally find it useful.
+
+If you wanna contribute with code, feel free to submit a pull request. I will check it and merge it if it doesn't breaks anything :P
