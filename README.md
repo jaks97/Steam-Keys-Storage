@@ -1,5 +1,5 @@
 # Steam Keys Storage
-This is a tool I made to help myself to store Steam games keys in an easy way. It is made in C# using Windows Forms and stores the data in 
+This is a tool I made to help myself to store Steam games keys in an easy way and make trading easier. It is made in C# using Windows Forms and stores the data in 
 a SQLite based database file.
 
 I made this tool some time ago for personal use, but I am sharing it now as it can be useful for others. This is why you can find some weird things on 
