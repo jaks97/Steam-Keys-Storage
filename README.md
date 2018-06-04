@@ -91,7 +91,7 @@ If you don't specify a new password, then encryption will be disabled.
 ### Why it asks for password when I haven't set up one? / It says my password is wrong?
 There is a rare possibility that your `.db` file became corrupted. Sorry, your data is lost. Well, not all of it. You can use the backup file to restore it to a working point.
 
-### How do I use backup file to restore my data?
+### How do I use the backup file to restore my data?
 Just rename `Keys.bak` to `Keys.db` and launch the program. 
 
 `Keys.bak` contains the data that was saved the last time that you started the program without any failures. It doesn't includes the data you wrote in that launch.
