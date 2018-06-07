@@ -43,6 +43,7 @@ namespace Keys_Store
                 update();
             }
 
+            KeysDAO.Backup();
 
         }
 
