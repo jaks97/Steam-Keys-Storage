@@ -27,7 +27,7 @@ access to multiple AppIDs).
 ![](https://i.imgur.com/1Xs5LJj.png)
 
 If you don't know what to fill in SubID, just fill an AppID and the tool should gather a valid SubID. But check out that the tool will have
-troubles to do this with games that were removed from Steam. That's were `Removed` checkbox is useful. When checked, the tool won't try to connect to Steam and fetch any data.
+troubles to do this with games that were removed from Steam. That's where `Removed` checkbox is useful. When checked, the tool won't try to connect to Steam and fetch any data.
 
 You can put anything on the keys box. So feel free to use this to store your giftlinks aswell (or just whatever you want).
 
