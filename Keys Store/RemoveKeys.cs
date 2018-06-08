@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Keys_Store
 {
     public partial class RemoveKeys : Form
     {
-        private List<CartItem> items;
-        List<CheckBox> checkBoxes = new List<CheckBox>();
-        string keysString = "";
-        List<Key> keys = new List<Key>();
+        public List<CartItem> Items { private get; set; }
+        private List<CheckBox> checkBoxes = new List<CheckBox>();
+        private StringBuilder keysString = new StringBuilder();
+        private List<Key> keys = new List<Key>();
 
         public RemoveKeys()
         {
@@ -18,29 +19,22 @@ namespace Keys_Store
             this.CenterToScreen();
         }
 
-
-        internal List<CartItem> Items
-        {
-            set
-            {
-                items = value;
-            }
-        }
-
         private void RemoveKeys_Load(object sender, EventArgs e)
         {
-            foreach (CartItem item in items)
+            foreach (CartItem item in Items)
             {
                 while (item.Quantity > 0)
                 {
                     Key key = item.Package.GetKey;
-                    keysString += item.AppName + ": " + key.KeyCode + "\r\n";
+
+                    string itemString = item.AppName + ": " + key.KeyCode;
+                    keysString.AppendLine(itemString);
                     keys.Add(key);
 
                     CheckBox cb = new CheckBox();
                     cb.Width = 500;
                     cb.Height = 17;
-                    cb.Text = item.AppName + ": " + key.KeyCode;
+                    cb.Text = itemString;
                     cb.Checked = true;
                     cb.Visible = true;
 
@@ -50,13 +44,13 @@ namespace Keys_Store
                     item.Quantity--;
                 }
             }
-            Clipboard.SetDataObject(keysString, false, 5, 200);
-            
+            Clipboard.SetDataObject(keysString.ToString(), false, 5, 200);
+
         }
 
         private void copyButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetDataObject(keysString, false, 5, 200);
+            Clipboard.SetDataObject(keysString.ToString(), false, 5, 200);
         }
 
         private void removeButton_Click(object sender, EventArgs e)
@@ -70,7 +64,7 @@ namespace Keys_Store
                 }
             }
 
-            if (keys.Count>0)
+            if (keys.Count > 0)
             {
                 KeysDAO.remove(toRemove);
 

@@ -21,7 +21,7 @@ namespace Keys_Store
             }
             catch (System.Data.SQLite.SQLiteException)
             {
-                MessageBox.Show("Wrong password","ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Wrong password", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }
 
@@ -32,7 +32,6 @@ namespace Keys_Store
 
         private void Password_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             if (e.CloseReason != CloseReason.UserClosing || this.DialogResult == DialogResult.Cancel)
                 Environment.Exit(0);
         }

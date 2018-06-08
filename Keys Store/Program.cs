@@ -17,7 +17,6 @@ namespace Keys_Store
             if (!File.Exists("Keys.db"))
                 KeysDAO.create();
             Application.Run(new Form1());
-
         }
     }
 }

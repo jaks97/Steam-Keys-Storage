@@ -57,6 +57,7 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.LightGray;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.appName,
@@ -168,6 +169,7 @@
             // 
             this.selectedGames.AllowUserToAddRows = false;
             this.selectedGames.AllowUserToDeleteRows = false;
+            this.selectedGames.BackgroundColor = System.Drawing.Color.LightGray;
             this.selectedGames.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.selectedGames.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Game,

@@ -1,37 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
+using System.Text;
 
 namespace Keys_Store
 {
     class DBConnection
     {
-        private static string connectionString = "Data Source=Keys.db;Version=3;";
-
-        public static string Password
-        {
-            get
-            {
-                string[] str = connectionString.Replace(" ", string.Empty).Split(new string[] { "Password=" }, StringSplitOptions.None);
-                return str.Length > 1 ? str.Last().Replace(";", string.Empty) : string.Empty;
-            }
-            set
-            {
-                connectionString = "Data Source=Keys.db;Version=3;Password=" + value + ";";
-                if (value == string.Empty)
-                    connectionString = "Data Source=Keys.db;Version=3;";
-            }
-        }
+        public static string Password { get; set; } = "";
 
         public static bool IsEncrypted
         {
-            get
-            {
-                return Password != string.Empty;
-            }
+            get { return Password != ""; }
         }
-
 
         public static void SetPassword(string pass)
         {
@@ -43,7 +24,8 @@ namespace Keys_Store
 
         public static SQLiteConnection getConnection()
         {
-            SQLiteConnection cnn = new SQLiteConnection(connectionString);
+            SQLiteConnection cnn = new SQLiteConnection("Data Source=Keys.db;Version=3;");
+            cnn.SetPassword(Password);
             cnn.Open();
             return cnn;
         }
@@ -56,8 +38,9 @@ namespace Keys_Store
             SQLiteConnection cnn = DBConnection.getConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
-            command.CommandText = @"BEGIN TRANSACTION;CREATE TABLE'packages'(`SubID`INTEGER NOT NULL UNIQUE,`AppID`INTEGER,`Name`TEXT,`HasCards`INTEGER,`Details`TEXT,PRIMARY KEY(`SubID`));CREATE TABLE'keys'(`Key`TEXT NOT NULL,`SubID`INTEGER,`Date`TEXT,`Details`TEXT,PRIMARY KEY(`Key`),FOREIGN KEY(`SubID`)REFERENCES`packages`(`SubID`));COMMIT;";
+            command.CommandText = @"BEGIN TRANSACTION;CREATE TABLE'packages'(`SubID`INTEGER NOT NULL UNIQUE,`AppID`INTEGER,`Name`TEXT,`HasCards`INTEGER,PRIMARY KEY(`SubID`));CREATE TABLE'keys'(`Key`TEXT NOT NULL,`SubID`INTEGER,`Date`TEXT,`Details`TEXT,PRIMARY KEY(`Key`),FOREIGN KEY(`SubID`)REFERENCES`packages`(`SubID`));COMMIT;";
             command.ExecuteNonQuery();
+            cnn.Close();
         }
         public static List<Key> readAll()
         {
@@ -67,15 +50,10 @@ namespace Keys_Store
             SQLiteCommand command = new SQLiteCommand(cnn);
             command.CommandText = "SELECT * FROM keys";
             SQLiteDataReader reader = command.ExecuteReader();
-            
+
             while (reader.Read())
             {
-                if (reader.IsDBNull(4))
-                {
-                    keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
-                }
-                else
-                    keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
+                keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
             }
 
             cnn.Close();
@@ -88,17 +66,12 @@ namespace Keys_Store
             SQLiteConnection cnn = DBConnection.getConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
-            command.CommandText = "SELECT * FROM keys where SubID = '"+subID+ "' ORDER BY 'Date' DESC";
+            command.CommandText = "SELECT * FROM keys WHERE SubID = '" + subID + "' ORDER BY 'Date' DESC";
             SQLiteDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
-                if (reader.IsDBNull(4))
-                {
-                    keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
-                }
-                else
-                    keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
+                keys.Add(new Key(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetString(3)));
             }
 
             cnn.Close();
@@ -107,35 +80,47 @@ namespace Keys_Store
         }
         public static void add(List<Key> keys)
         {
-            SQLiteConnection cnn = DBConnection.getConnection();
-            SQLiteCommand command = new SQLiteCommand(cnn);
-            command.CommandText = "INSERT INTO keys values ";
-            foreach (Key key in keys)
+            if (keys != null && keys.Count > 0)
             {
-                command.CommandText += "('" + key.KeyCode + "', '" + key.SubId + "', '" + key.Date.ToString("yyyy-MM-dd") + "', '" + key.Details.Replace("'", "''") + "'),";
+                SQLiteConnection cnn = DBConnection.getConnection();
+                SQLiteCommand command = new SQLiteCommand(cnn);
+
+                StringBuilder SQL = new StringBuilder("INSERT INTO keys VALUES ");
+
+                foreach (Key key in keys)
+                {
+                    SQL.AppendFormat("('{0}','{1}','{2}','{3}'),", key.KeyCode, key.SubId, key.Date.ToString("yyyy-MM-dd"), key.Details.Replace("'", "''"));
+                }
+
+                SQL.Length--;
+                command.CommandText = SQL.ToString();
+
+                command.ExecuteNonQuery();
+
+                cnn.Close();
             }
-
-            command.CommandText = command.CommandText.Remove(command.CommandText.Length - 1);
-            
-            command.ExecuteNonQuery();
-
-            cnn.Close();
         }
 
         public static void remove(List<Key> keys)
         {
-            SQLiteConnection cnn = DBConnection.getConnection();
-            SQLiteCommand command = new SQLiteCommand(cnn);
-            command.CommandText = "DELETE FROM keys WHERE key = 0";
-
-            foreach (Key key in keys)
+            if (keys != null && keys.Count > 0)
             {
-                command.CommandText += " OR Key = '" + key.KeyCode + "'";
-            }
+                SQLiteConnection cnn = DBConnection.getConnection();
+                SQLiteCommand command = new SQLiteCommand(cnn);
+                StringBuilder SQL = new StringBuilder("DELETE FROM keys WHERE ");
 
-            command.ExecuteNonQuery();
-            
-            cnn.Close();
+                foreach (Key key in keys)
+                {
+                    SQL.AppendFormat("Key = '{0}' OR ", key.KeyCode);
+                }
+
+                SQL.Length -= 4;
+                command.CommandText = SQL.ToString();
+
+                command.ExecuteNonQuery();
+
+                cnn.Close();
+            }
         }
 
         public static void Backup()
@@ -163,7 +148,7 @@ namespace Keys_Store
 
             while (reader.Read())
             {
-                packages.Add(new Package(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetBoolean(3), reader.GetString(4)));
+                packages.Add(new Package(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetBoolean(3)));
             }
 
             cnn.Close();
@@ -175,11 +160,9 @@ namespace Keys_Store
         {
             SQLiteConnection cnn = DBConnection.getConnection();
             SQLiteCommand command = new SQLiteCommand(cnn);
-            command.CommandText = "INSERT OR IGNORE INTO packages values ";
 
-            command.CommandText += "('" + package.SubId + "', '" + package.AppId + "', '"
-                + package.AppName.Replace("'", "''") + "', '" + Convert.ToInt16(package.HasCards) + "', '" + package.Details.Replace("'", "''") + "')";
-            
+            command.CommandText = string.Format("INSERT OR IGNORE INTO packages ('SubID','AppID','Name','HasCards') VALUES ('{0}','{1}','{2}','{3}')", package.SubId, package.AppId,
+                package.AppName.Replace("'", "''"), Convert.ToInt16(package.HasCards));
 
             command.ExecuteNonQuery();
 

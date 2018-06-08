@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -9,29 +10,21 @@ namespace Keys_Store
     {
         private List<Package> packages;
 
-        internal List<Package> Packages
-        {
-            set
-            {
-                packages = value;
-            }
-        }
-
-        public ExportGames()
+        public ExportGames(List<Package> packages)
         {
             InitializeComponent();
+            this.packages = packages;
         }
 
         private void ExportGames_Load(object sender, EventArgs e)
         {
-            update();
+            this.UpdateResults();
         }
 
-        private void update()
+        private void UpdateResults()
         {
-
             string format = this.format.Text + (lineJump.Checked ? "\r\n" : "");
-            results.Text = String.Empty;
+            results.Text = string.Empty;
 
             foreach (Package package in packages)
             {
@@ -44,7 +37,7 @@ namespace Keys_Store
                     .ReplaceIgnoreCase("{PACKAGEURL}", package.SubPage.ToString())
                     .ReplaceIgnoreCase("{COUNT}", package.Quantity.ToString());
             }
-            
+
         }
 
         private void copybtn_Click(object sender, EventArgs e)

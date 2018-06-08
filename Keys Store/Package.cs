@@ -1,40 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Keys_Store
 {
     public class Package
     {
-        private int subId;
-        private int appId;
-        private string appName;
-        private bool hasCards;
-        private string details = "";
-
-        private List<Key> keys;
-
-        public Package(int subId, int appId, string appName, bool hasCards, string details)
+        public int SubId { get; set; }
+        public int AppId { get; set; }
+        public string AppName { get; set; }
+        public bool HasCards { get; set; }
+        private List<string> details = new List<string>();
+        public string Details
         {
-            this.SubId = subId;
-            this.AppId = appId;
-            this.AppName = appName;
-            this.HasCards = hasCards;
-            this.keys = KeysDAO.find(subId);
-            this.details = details + "  ";
-
-            foreach (Key key in this.keys)
+            get
             {
-                if(!this.details.Contains(key.Details))
-                {
-                    this.details += " "+key.Details+" ";
-                }
+                StringBuilder sb = new StringBuilder("  ");
+                foreach (string detail in this.details)
+                    sb.Append(detail).Append(" ");
+
+                return sb.ToString();
             }
         }
 
-        public bool Equals(Package package)
+        private List<Key> keys;
+
+        public Uri StorePage
         {
-            return this.SubId == package.SubId;
+            get { return new Uri("https://store.steampowered.com/app/" + AppId + "/"); }
+        }
+
+        public Uri SubPage
+        {
+            get { return new Uri("https://store.steampowered.com/sub/" + SubId + "/"); }
+        }
+
+        public int Quantity
+        {
+            get { return keys.Count; }
         }
 
         public Key GetKey
@@ -47,93 +51,22 @@ namespace Keys_Store
             }
         }
 
-        public int SubId
+        public Package(int subId, int appId, string appName, bool hasCards)
         {
-            get
-            {
-                return subId;
-            }
+            this.SubId = subId;
+            this.AppId = appId;
+            this.AppName = appName;
+            this.HasCards = hasCards;
+            this.keys = KeysDAO.find(subId);
 
-            set
-            {
-                subId = value;
-            }
+            foreach (Key key in this.keys)
+                if (!this.details.Contains(key.Details))
+                    this.details.Add(key.Details);
         }
 
-        public int AppId
+        public bool Equals(Package package)
         {
-            get
-            {
-                return appId;
-            }
-
-            set
-            {
-                appId = value;
-            }
-        }
-
-        public string AppName
-        {
-            get
-            {
-                return appName;
-            }
-
-            set
-            {
-                appName = value;
-            }
-        }
-
-        public bool HasCards
-        {
-            get
-            {
-                return hasCards;
-            }
-
-            set
-            {
-                hasCards = value;
-            }
-        }
-
-        public string Details
-        {
-            get
-            {
-                return details;
-            }
-
-            set
-            {
-                details = value;
-            }
-        }
-        
-        public Uri StorePage
-        {
-            get
-            {
-                return new Uri("https://store.steampowered.com/app/" + AppId + "/");
-            }
-        }
-
-        public Uri SubPage
-        {
-            get
-            {
-                return new Uri("https://store.steampowered.com/sub/" + SubId + "/");
-            }
-        }
-
-        public int Quantity
-        {
-            get
-            {
-                return keys.Count;
-            }
+            return this.SubId == package.SubId;
         }
     }
 }

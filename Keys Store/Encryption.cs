@@ -10,35 +10,26 @@ namespace Keys_Store
             InitializeComponent();
         }
 
+        private readonly bool IsDBEncrypted = DBConnection.IsEncrypted;
+
         private void Encryption_Load(object sender, EventArgs e)
         {
-            statuslbl.Text += DBConnection.IsEncrypted ? "Encrypted" : "Not encrypted";
-            if (!DBConnection.IsEncrypted)
-            {
-                oldPasstxt.Enabled = false;
-            }
+            statuslbl.Text += IsDBEncrypted ? "Encrypted" : "Not encrypted";
+            oldPasstxt.Enabled = IsDBEncrypted;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if (newPasstxt.Text == repeatPasstxt.Text)
             {
-                if (DBConnection.IsEncrypted)
-                {
-                    if (DBConnection.Password == oldPasstxt.Text)
-                    {
-                        DBConnection.SetPassword(newPasstxt.Text);
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Old password is wrong", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    }
-                }
-                else
+                if (IsDBEncrypted || DBConnection.Password == oldPasstxt.Text)
                 {
                     DBConnection.SetPassword(newPasstxt.Text);
                     this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Old password is wrong", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
             else

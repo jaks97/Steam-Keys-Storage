@@ -18,13 +18,12 @@ namespace Keys_Store
         List<string> games = new List<string>();
         public Form1()
         {
-            
+
             InitializeComponent();
             bl = new BindingList<CartItem>(selected);
 
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.AutoSize = true;
-            
 
             selectedGames.AutoGenerateColumns = false;
 
@@ -32,7 +31,7 @@ namespace Keys_Store
 
             try
             {
-                update();
+                UpdateList();
             }
             catch (System.Data.SQLite.SQLiteException)
             {
@@ -40,19 +39,19 @@ namespace Keys_Store
                 {
                     password.ShowDialog(this);
                 }
-                update();
+                UpdateList();
             }
 
             KeysDAO.Backup();
 
         }
 
-        public void update()
+        public void UpdateList()
         {
             bs = new List<Package>();
             foreach (Package package in PackagesDAO.readAll())
             {
-                if ((hide.Checked && package.Quantity>0)||!hide.Checked)
+                if (!hide.Checked || package.Quantity > 0)
                 {
                     bs.Add(package);
                 }
@@ -66,7 +65,7 @@ namespace Keys_Store
             int keys = 0;
             foreach (var item in bs)
             {
-                keys+=item.Quantity;
+                keys += item.Quantity;
             }
             label1.Text = "Total: " + keys + " Keys - " + bs.Count + " Games";
 
@@ -80,7 +79,6 @@ namespace Keys_Store
 
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
-
                 column.SortMode = DataGridViewColumnSortMode.Automatic;
             }
         }
@@ -91,10 +89,10 @@ namespace Keys_Store
             {
                 addKey.ShowDialog();
             }
-            update();
+            UpdateList();
 
         }
-        
+
         private void copyButton_Click(object sender, EventArgs e)
         {
             if (selected.Count > 0)
@@ -104,16 +102,16 @@ namespace Keys_Store
                     removeKeys.Items = selected;
                     removeKeys.ShowDialog();
                 }
-                update();
+                UpdateList();
             }
         }
-        
-        
+
+
         private void rightBtn_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
-                if (((Package)row.DataBoundItem).Quantity>0)
+                if (((Package)row.DataBoundItem).Quantity > 0)
                 {
                     CartItem item = new CartItem((Package)row.DataBoundItem);
                     if (selected.Exists(x => item.Equals(x)))
@@ -137,7 +135,7 @@ namespace Keys_Store
                 CartItem item = (CartItem)row.DataBoundItem;
                 if (selected.Exists(x => item.Equals(x)))
                 {
-                    if ((selected.Find(x => item.Package.Equals(x.Package)).Quantity-=1) == 0)
+                    if ((selected.Find(x => item.Package.Equals(x.Package)).Quantity -= 1) == 0)
                     {
                         selected.Remove(selected.Find(x => item.Package.Equals(x.Package)));
                     }
@@ -146,7 +144,7 @@ namespace Keys_Store
             bl = new BindingList<CartItem>(selected);
             selectedGames.DataSource = bl;
         }
-        
+
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
@@ -160,18 +158,18 @@ namespace Keys_Store
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            update();
+            UpdateList();
         }
 
         public string[] gamesToAdd = null;
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
             using (var findkeys = new FindKeys())
             {
                 findkeys.ShowDialog(this);
             }
-            if (gamesToAdd != null && gamesToAdd.Count()>0)
+            if (gamesToAdd != null && gamesToAdd.Count() > 0)
             {
                 List<String> missing = new List<string>();
                 foreach (string game in gamesToAdd.Where(x => x != null && x != ""))
@@ -230,9 +228,8 @@ namespace Keys_Store
 
         private void exportgamesbtn_Click(object sender, EventArgs e)
         {
-            using (var export = new ExportGames())
+            using (var export = new ExportGames(bs))
             {
-                export.Packages = bs;
                 export.ShowDialog(this);
             }
         }
@@ -269,7 +266,7 @@ namespace Keys_Store
             if (e.RowIndex != -1)
                 rightBtn_Click(sender, e);
         }
-        
+
         private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             dataGridView1.ClearSelection();

@@ -6,7 +6,7 @@ namespace Keys_Store
 {
     public partial class ExportKeys : Form
     {
-        private Dictionary<Package,List<Key>> keys = new Dictionary<Package, List<Key>>();
+        private Dictionary<Package, List<Key>> keys = new Dictionary<Package, List<Key>>();
 
         public ExportKeys()
         {
@@ -16,16 +16,16 @@ namespace Keys_Store
         private void ExportKeys_Load(object sender, EventArgs e)
         {
             var keys = KeysDAO.readAll();
-            foreach (Package pack in PackagesDAO.readAll().FindAll( x => x.Quantity > 0 ))
+            foreach (Package pack in PackagesDAO.readAll())
             {
-                this.keys.Add(pack, keys.FindAll(x => x.SubId == pack.SubId));
+                if (pack.Quantity > 0)
+                    this.keys.Add(pack, keys.FindAll(x => x.SubId == pack.SubId));
             }
 
-            update();
+            UpdateResults();
         }
-        private void update()
+        private void UpdateResults()
         {
-
             string format = this.format.Text + (lineJump.Checked ? "\r\n" : "");
             results.Text = String.Empty;
 
@@ -42,9 +42,7 @@ namespace Keys_Store
                     .ReplaceIgnoreCase("{KEY}", key.KeyCode)
                     .ReplaceIgnoreCase("{PACKAGEURL}", item.Key.SubPage.ToString());
                 }
-                
             }
-
         }
         private void copybtn_Click(object sender, EventArgs e)
         {
@@ -52,7 +50,7 @@ namespace Keys_Store
         }
         private void update(object sender, EventArgs e)
         {
-            update();
+            UpdateResults();
         }
     }
 }
