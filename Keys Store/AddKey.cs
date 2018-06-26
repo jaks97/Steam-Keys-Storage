@@ -14,6 +14,7 @@ namespace Keys_Store
         {
             InitializeComponent();
             this.CenterToScreen();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -74,7 +75,7 @@ namespace Keys_Store
             Cursor.Current = Cursors.WaitCursor;
             try
             {
-                string json = WebAPICall("http://store.steampowered.com/api/appdetails?appids=" + appID);
+                string json = WebAPICall("https://store.steampowered.com/api/appdetails?appids=" + appID);
 
                 var jsonObject = JsonConvert.DeserializeObject<Dictionary<int, dynamic>>(json).FirstOrDefault().Value.data;
                 name.Text = jsonObject.name;
@@ -82,8 +83,9 @@ namespace Keys_Store
 
                 hasCards.Checked = HasCards(appID);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 hasCards.Checked = false;
             }
             Cursor.Current = Cursors.Default;
@@ -94,7 +96,7 @@ namespace Keys_Store
             Cursor.Current = Cursors.WaitCursor;
             try
             {
-                string json = WebAPICall("http://store.steampowered.com/api/packagedetails?packageids=" + subID);
+                string json = WebAPICall("https://store.steampowered.com/api/packagedetails?packageids=" + subID);
 
                 var jsonObject = JsonConvert.DeserializeObject<Dictionary<int, dynamic>>(json).FirstOrDefault().Value.data;
                 name.Text = jsonObject.name;
