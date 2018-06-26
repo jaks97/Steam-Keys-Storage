@@ -83,9 +83,8 @@ namespace Keys_Store
 
                 hasCards.Checked = HasCards(appID);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 hasCards.Checked = false;
             }
             Cursor.Current = Cursors.Default;
