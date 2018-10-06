@@ -15,7 +15,7 @@ namespace Keys_Store
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (!File.Exists("Keys.db"))
-                KeysDAO.create();
+                KeysDAO.Create();
             Application.Run(new Form1());
         }
     }

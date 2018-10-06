@@ -31,12 +31,14 @@ namespace Keys_Store
                     keysString.AppendLine(itemString);
                     keys.Add(key);
 
-                    CheckBox cb = new CheckBox();
-                    cb.Width = 500;
-                    cb.Height = 17;
-                    cb.Text = itemString;
-                    cb.Checked = true;
-                    cb.Visible = true;
+                    CheckBox cb = new CheckBox
+                    {
+                        Width = 500,
+                        Height = 17,
+                        Text = itemString,
+                        Checked = true,
+                        Visible = true
+                    };
 
                     keysPanel.Controls.Add(cb);
                     checkBoxes.Add(cb);
@@ -66,9 +68,9 @@ namespace Keys_Store
 
             if (keys.Count > 0)
             {
-                KeysDAO.remove(toRemove);
+                KeysDAO.Remove(toRemove);
 
-                List<Package> packages = PackagesDAO.readAll();
+                List<Package> packages = PackagesDAO.ReadAll();
                 List<Package> emptyGames = new List<Package>();
                 string emptyGamesString = "";
                 foreach (var removed in toRemove)

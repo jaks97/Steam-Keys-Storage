@@ -15,8 +15,8 @@ namespace Keys_Store
 
         private void ExportKeys_Load(object sender, EventArgs e)
         {
-            var keys = KeysDAO.readAll();
-            foreach (Package pack in PackagesDAO.readAll())
+            var keys = KeysDAO.ReadAll();
+            foreach (Package pack in PackagesDAO.ReadAll())
             {
                 if (pack.Quantity > 0)
                     this.keys.Add(pack, keys.FindAll(x => x.SubId == pack.SubId));
@@ -48,7 +48,7 @@ namespace Keys_Store
         {
             Clipboard.SetDataObject(results.Text, false, 5, 200);
         }
-        private void update(object sender, EventArgs e)
+        private void Update(object sender, EventArgs e)
         {
             UpdateResults();
         }

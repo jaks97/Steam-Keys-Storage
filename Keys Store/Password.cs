@@ -15,7 +15,7 @@ namespace Keys_Store
             DBConnection.Password = textBox1.Text;
             try
             {
-                KeysDAO.readAll();
+                KeysDAO.ReadAll();
                 DialogResult = DialogResult.OK;
                 this.Close();
             }

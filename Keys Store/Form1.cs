@@ -49,7 +49,7 @@ namespace Keys_Store
         public void UpdateList()
         {
             bs = new List<Package>();
-            foreach (Package package in PackagesDAO.readAll())
+            foreach (Package package in PackagesDAO.ReadAll())
             {
                 if (!hide.Checked || package.Quantity > 0)
                 {

@@ -38,7 +38,7 @@ namespace Keys_Store
                 return;
             }
             Package pack = new Package(subID, appID, name, cards);
-            PackagesDAO.add(pack);
+            PackagesDAO.Add(pack);
 
             List<Key> keys = new List<Key>();
             foreach (string key in this.keys.Lines)
@@ -48,7 +48,7 @@ namespace Keys_Store
                     keys.Add(new Key(key.Trim(), subID, DateTime.Now, detailsBox.Text));
                 }
             }
-            KeysDAO.add(keys);
+            KeysDAO.Add(keys);
             this.Close();
         }
 

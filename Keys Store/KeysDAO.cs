@@ -16,13 +16,13 @@ namespace Keys_Store
 
         public static void SetPassword(string pass)
         {
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
             cnn.ChangePassword(pass);
             cnn.Close();
             Password = pass;
         }
 
-        public static SQLiteConnection getConnection()
+        public static SQLiteConnection GetConnection()
         {
             SQLiteConnection cnn = new SQLiteConnection("Data Source=Keys.db;Version=3;");
             cnn.SetPassword(Password);
@@ -32,20 +32,20 @@ namespace Keys_Store
     }
     class KeysDAO
     {
-        public static void create()
+        public static void Create()
         {
             SQLiteConnection.CreateFile("Keys.db");
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
             command.CommandText = @"BEGIN TRANSACTION;CREATE TABLE'packages'(`SubID`INTEGER NOT NULL UNIQUE,`AppID`INTEGER,`Name`TEXT,`HasCards`INTEGER,PRIMARY KEY(`SubID`));CREATE TABLE'keys'(`Key`TEXT NOT NULL,`SubID`INTEGER,`Date`TEXT,`Details`TEXT,PRIMARY KEY(`Key`),FOREIGN KEY(`SubID`)REFERENCES`packages`(`SubID`));COMMIT;";
             command.ExecuteNonQuery();
             cnn.Close();
         }
-        public static List<Key> readAll()
+        public static List<Key> ReadAll()
         {
             List<Key> keys = new List<Key>();
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
             command.CommandText = "SELECT * FROM keys";
@@ -60,10 +60,10 @@ namespace Keys_Store
 
             return keys;
         }
-        public static List<Key> find(int subID)
+        public static List<Key> Find(int subID)
         {
             List<Key> keys = new List<Key>();
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
             command.CommandText = "SELECT * FROM keys WHERE SubID = '" + subID + "' ORDER BY 'Date' DESC";
@@ -78,11 +78,11 @@ namespace Keys_Store
 
             return keys;
         }
-        public static void add(List<Key> keys)
+        public static void Add(List<Key> keys)
         {
             if (keys != null && keys.Count > 0)
             {
-                SQLiteConnection cnn = DBConnection.getConnection();
+                SQLiteConnection cnn = DBConnection.GetConnection();
                 SQLiteCommand command = new SQLiteCommand(cnn);
 
                 StringBuilder SQL = new StringBuilder("INSERT INTO keys VALUES ");
@@ -101,11 +101,11 @@ namespace Keys_Store
             }
         }
 
-        public static void remove(List<Key> keys)
+        public static void Remove(List<Key> keys)
         {
             if (keys != null && keys.Count > 0)
             {
-                SQLiteConnection cnn = DBConnection.getConnection();
+                SQLiteConnection cnn = DBConnection.GetConnection();
                 SQLiteCommand command = new SQLiteCommand(cnn);
                 StringBuilder SQL = new StringBuilder("DELETE FROM keys WHERE ");
 
@@ -127,7 +127,7 @@ namespace Keys_Store
         {
             try
             {
-                readAll();
+                ReadAll();
                 System.IO.File.Copy("Keys.db", "Keys.bak", true);
             }
             catch (Exception)
@@ -137,10 +137,10 @@ namespace Keys_Store
     }
     class PackagesDAO
     {
-        public static List<Package> readAll()
+        public static List<Package> ReadAll()
         {
             List<Package> packages = new List<Package>();
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
 
             SQLiteCommand command = new SQLiteCommand(cnn);
             command.CommandText = "SELECT * FROM packages ORDER BY Name ASC";
@@ -156,9 +156,9 @@ namespace Keys_Store
             return packages;
         }
 
-        public static void add(Package package)
+        public static void Add(Package package)
         {
-            SQLiteConnection cnn = DBConnection.getConnection();
+            SQLiteConnection cnn = DBConnection.GetConnection();
             SQLiteCommand command = new SQLiteCommand(cnn);
 
             command.CommandText = string.Format("INSERT OR IGNORE INTO packages ('SubID','AppID','Name','HasCards') VALUES ('{0}','{1}','{2}','{3}')", package.SubId, package.AppId,

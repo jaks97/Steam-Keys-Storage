@@ -57,7 +57,7 @@ namespace Keys_Store
             this.AppId = appId;
             this.AppName = appName;
             this.HasCards = hasCards;
-            this.keys = KeysDAO.find(subId);
+            this.keys = KeysDAO.Find(subId);
 
             foreach (Key key in this.keys)
                 if (!this.details.Contains(key.Details))

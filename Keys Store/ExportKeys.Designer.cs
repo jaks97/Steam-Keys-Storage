@@ -76,7 +76,7 @@
             this.lineJump.TabIndex = 8;
             this.lineJump.Text = "One per line";
             this.lineJump.UseVisualStyleBackColor = true;
-            this.lineJump.CheckedChanged += new System.EventHandler(this.update);
+            this.lineJump.CheckedChanged += new System.EventHandler(this.Update);
             // 
             // label1
             // 
@@ -94,8 +94,8 @@
             this.format.Size = new System.Drawing.Size(425, 20);
             this.format.TabIndex = 6;
             this.format.Text = "{NAME} - {KEY}";
-            this.format.TextChanged += new System.EventHandler(this.update);
-            this.format.Leave += new System.EventHandler(this.update);
+            this.format.TextChanged += new System.EventHandler(this.Update);
+            this.format.Leave += new System.EventHandler(this.Update);
             // 
             // ExportKeys
             // 
