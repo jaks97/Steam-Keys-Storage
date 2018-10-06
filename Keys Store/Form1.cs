@@ -63,7 +63,7 @@ namespace Keys_Store
             selectedGames.DataSource = bl;
 
             int keys = 0;
-            foreach (var item in bs)
+            foreach (Package item in bs)
             {
                 keys += item.Quantity;
             }

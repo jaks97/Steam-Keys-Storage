@@ -161,8 +161,7 @@ namespace Keys_Store
             SQLiteConnection cnn = DBConnection.GetConnection();
             SQLiteCommand command = new SQLiteCommand(cnn);
 
-            command.CommandText = string.Format("INSERT OR IGNORE INTO packages ('SubID','AppID','Name','HasCards') VALUES ('{0}','{1}','{2}','{3}')", package.SubId, package.AppId,
-                package.AppName.Replace("'", "''"), Convert.ToInt16(package.HasCards));
+            command.CommandText = $"INSERT OR IGNORE INTO packages ('SubID','AppID','Name','HasCards') VALUES ('{package.SubId}','{package.AppId}','{package.AppName.Replace("'", "''")}','{Convert.ToInt16(package.HasCards)}')";
 
             command.ExecuteNonQuery();
 

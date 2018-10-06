@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Keys_Store
@@ -52,16 +53,16 @@ namespace Keys_Store
             this.Close();
         }
 
-        private string WebAPICall(string uri)
+        private async Task<string> WebAPICall(string uri)
         {
-            return new StreamReader(WebRequest.Create(uri).GetResponse().GetResponseStream()).ReadToEnd();
+            return new StreamReader((await WebRequest.Create(uri).GetResponseAsync()).GetResponseStream()).ReadToEnd();
         }
-        private bool HasCards(int appID)
+        private async Task<bool> HasCards(int appID)
         {
             string json;
             try
             {
-                json = WebAPICall("https://jaks.cf/api/cards");
+                json = await WebAPICall("https://jaks.cf/api/cards");
             }
             catch (Exception)
             {
@@ -70,45 +71,64 @@ namespace Keys_Store
             return JsonConvert.DeserializeObject<List<int>>(json).Contains(appID);
         }
 
-        private void BindByApp(int appID)
+        private async void BindByApp(int appID)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            this.name.Enabled = false;
+            this.appID.Enabled = false;
+            this.subID.Enabled = false;
+            this.hasCards.Enabled = false;
+
             try
             {
-                string json = WebAPICall("https://store.steampowered.com/api/appdetails?appids=" + appID);
+                string json = await WebAPICall("https://store.steampowered.com/api/appdetails?appids=" + appID);
 
                 var jsonObject = JsonConvert.DeserializeObject<Dictionary<int, dynamic>>(json).FirstOrDefault().Value.data;
                 name.Text = jsonObject.name;
                 subID.Text = jsonObject.packages[0];
 
-                hasCards.Checked = HasCards(appID);
+                hasCards.Checked = await HasCards(appID);
             }
             catch (Exception)
             {
                 hasCards.Checked = false;
             }
-            Cursor.Current = Cursors.Default;
+            finally
+            {
+                this.name.Enabled = true;
+                this.appID.Enabled = true;
+                this.subID.Enabled = true;
+                this.hasCards.Enabled = true;
+            }
         }
 
-        private void BindBySub(int subID)
+        private async void BindBySub(int subID)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            this.name.Enabled = false;
+            this.appID.Enabled = false;
+            this.subID.Enabled = false;
+            this.hasCards.Enabled = false;
             try
             {
-                string json = WebAPICall("https://store.steampowered.com/api/packagedetails?packageids=" + subID);
+                string json = await WebAPICall("https://store.steampowered.com/api/packagedetails?packageids=" + subID);
 
                 var jsonObject = JsonConvert.DeserializeObject<Dictionary<int, dynamic>>(json).FirstOrDefault().Value.data;
                 name.Text = jsonObject.name;
                 int appID = jsonObject.apps[0].id;
                 this.appID.Text = appID.ToString();
 
-                hasCards.Checked = HasCards(appID);
+                hasCards.Checked = await HasCards(appID);
             }
             catch (Exception)
             {
                 hasCards.Checked = false;
             }
-            Cursor.Current = Cursors.Default;
+            finally
+            {
+                this.name.Enabled = true;
+                this.appID.Enabled = true;
+                this.subID.Enabled = true;
+                this.hasCards.Enabled = true;
+            }
         }
 
         private void BindByName(string name)
